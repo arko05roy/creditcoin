@@ -148,7 +148,8 @@ export function useClaimQuest() {
         writeContract({
             ...contracts.questBoard,
             functionName: 'claimQuest',
-            args: [BigInt(questId)],
+            args: [questId], // uint8, not BigInt
+            gas: BigInt(500000), // Explicit gas limit
         });
     };
 

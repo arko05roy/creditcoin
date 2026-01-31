@@ -2,12 +2,11 @@
 
 import { useAccount } from 'wagmi';
 import { useUserPet, useMintPet } from '@/lib/hooks/useCrediPet';
-import { useCreditProfile, useCreditTier } from '@/lib/hooks/useCreditScore';
+import { useCreditProfile } from '@/lib/hooks/useCreditScore';
 import { useUserDeposits, useUserLoan, usePoolStats } from '@/lib/hooks/useLendingPool';
 import { useTotalXP, useQuestStatus } from '@/lib/hooks/useQuestBoard';
-import { PET_STAGES, CREDIT_TIERS } from '@/lib/contracts';
-
-const PET_EMOJIS = ['🥚', '🐣', '🐤', '🦅', '🐉'];
+import { PET_STAGES, CREDIT_TIERS, getPetColor } from '@/lib/contracts';
+import { PetSprite } from './PetSprite';
 
 export function PetCard() {
     const { address } = useAccount();
@@ -27,7 +26,7 @@ export function PetCard() {
     if (!pet || !tokenId) {
         return (
             <div className="glass-card p-8 flex flex-col items-center text-center">
-                <div className="text-8xl mb-6 opacity-50 animate-bounce-gentle">🥚</div>
+                <PetSprite stage={0} size="xl" animate showGlow={false} className="opacity-50 mb-4" />
                 <h3 className="text-2xl font-bold mb-2">No Pet Yet!</h3>
                 <p className="text-white/60 mb-6 max-w-sm">
                     Mint your very own CrediPet to start your credit journey.
@@ -47,31 +46,35 @@ export function PetCard() {
         );
     }
 
+    const colors = getPetColor(pet.stage);
+
     return (
         <div className="glass-card p-8 flex flex-col items-center text-center relative overflow-hidden">
-            {/* Background Glow based on stage */}
-            <div className={`absolute inset-0 bg-gradient-to-br opacity-10 ${pet.stage === 0 ? 'from-yellow-500 to-orange-500' :
-                    pet.stage === 1 ? 'from-green-500 to-emerald-500' :
-                        pet.stage === 2 ? 'from-blue-500 to-cyan-500' :
-                            pet.stage === 3 ? 'from-purple-500 to-violet-500' :
-                                'from-pink-500 to-rose-500'
-                }`} />
+            {/* Background Gradient */}
+            <div
+                className="absolute inset-0 opacity-10"
+                style={{ background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})` }}
+            />
 
             <div className="relative z-10">
-                {/* Pet Display */}
-                <div className={`text-9xl mb-4 animate-float ${pet.isWeakened ? 'grayscale opacity-70' : ''}`}>
-                    {PET_EMOJIS[pet.stage]}
-                </div>
+                {/* Pet Sprite */}
+                <PetSprite
+                    stage={pet.stage}
+                    isWeakened={pet.isWeakened}
+                    size="xl"
+                    showGlow={!pet.isWeakened}
+                    animate
+                />
 
                 {/* Health Status */}
                 {pet.isWeakened && (
-                    <div className="health-weakened text-sm mb-4 flex items-center gap-2">
+                    <div className="health-weakened text-sm mt-2 flex items-center justify-center gap-2">
                         <span>💔</span> Weakened - Repay to heal!
                     </div>
                 )}
 
                 {/* Stage Name */}
-                <h3 className="text-2xl font-bold mb-2">{stageName}</h3>
+                <h3 className="text-2xl font-bold mt-4 mb-2">{stageName}</h3>
 
                 {/* Token ID */}
                 <p className="text-white/50 text-sm mb-4">Token #{Number(tokenId)}</p>

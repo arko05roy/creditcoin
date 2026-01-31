@@ -3,6 +3,8 @@
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
+import { PetSprite } from './PetSprite';
+import { PET_STAGES as STAGE_NAMES, getPetColor } from '@/lib/contracts';
 
 const FEATURES = [
     {
@@ -32,11 +34,11 @@ const FEATURES = [
 ];
 
 const PET_STAGES = [
-    { name: 'Egg', emoji: '🥚', tier: 0, color: 'bg-yellow-500' },
-    { name: 'Hatchling', emoji: '🐣', tier: 1, color: 'bg-green-500' },
-    { name: 'Juvenile', emoji: '🐤', tier: 2, color: 'bg-blue-500' },
-    { name: 'Adult', emoji: '🦅', tier: 3, color: 'bg-purple-500' },
-    { name: 'Legendary', emoji: '🐉', tier: 4, color: 'bg-pink-500' },
+    { name: 'Egg', tier: 0 },
+    { name: 'Hatchling', tier: 1 },
+    { name: 'Juvenile', tier: 2 },
+    { name: 'Adult', tier: 3 },
+    { name: 'Legendary', tier: 4 },
 ];
 
 const STATS = [
@@ -61,9 +63,8 @@ export function HeroSection() {
             {/* Hero Content */}
             <div className="relative z-10 text-center max-w-4xl mx-auto">
                 {/* Pet Animation */}
-                <div className="mb-8 relative">
-                    <div className="text-9xl animate-bounce-gentle inline-block">🥚</div>
-                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-32 h-4 bg-black/30 rounded-full blur-md" />
+                <div className="mb-8 flex justify-center">
+                    <PetSprite stage={0} size="xl" animate showGlow />
                 </div>
 
                 {/* Headline */}
@@ -165,38 +166,49 @@ export function EvolutionSection() {
                     <div className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-yellow-500 via-blue-500 to-pink-500 transform -translate-y-1/2 hidden md:block" />
 
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-                        {PET_STAGES.map((stage, index) => (
-                            <div key={stage.name} className="flex flex-col items-center group">
-                                <div className={`relative glass-card p-6 w-full flex flex-col items-center ${index === 4 ? 'animate-pulse-glow' : ''}`}>
-                                    {/* Stage Number */}
-                                    <div className={`absolute -top-3 left-1/2 -translate-x-1/2 ${stage.color} text-white text-xs font-bold px-3 py-1 rounded-full`}>
-                                        Tier {stage.tier}
+                        {PET_STAGES.map((stage, index) => {
+                            const colors = getPetColor(stage.tier);
+                            return (
+                                <div key={stage.name} className="flex flex-col items-center group">
+                                    <div className={`relative glass-card p-6 w-full flex flex-col items-center ${index === 4 ? 'animate-pulse-glow' : ''}`}>
+                                        {/* Stage Number */}
+                                        <div
+                                            className="absolute -top-3 left-1/2 -translate-x-1/2 text-white text-xs font-bold px-3 py-1 rounded-full"
+                                            style={{ background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})` }}
+                                        >
+                                            Tier {stage.tier}
+                                        </div>
+
+                                        {/* Pet Sprite */}
+                                        <div className="group-hover:scale-110 transition-transform duration-300">
+                                            <PetSprite
+                                                stage={stage.tier}
+                                                size="md"
+                                                animate={false}
+                                                showGlow={index === 4}
+                                            />
+                                        </div>
+
+                                        {/* Stage Name */}
+                                        <div className="text-lg font-semibold mt-2">{stage.name}</div>
+
+                                        {/* Requirements */}
+                                        <div className="text-sm text-white/50 mt-2">
+                                            {stage.tier === 0 && 'Start here'}
+                                            {stage.tier === 1 && '1 repayment'}
+                                            {stage.tier === 2 && '3 repayments'}
+                                            {stage.tier === 3 && '7 repayments'}
+                                            {stage.tier === 4 && '15 repayments'}
+                                        </div>
                                     </div>
 
-                                    {/* Pet Emoji */}
-                                    <div className="text-5xl md:text-6xl mb-4 group-hover:scale-125 transition-transform duration-300">
-                                        {stage.emoji}
-                                    </div>
-
-                                    {/* Stage Name */}
-                                    <div className="text-lg font-semibold">{stage.name}</div>
-
-                                    {/* Requirements */}
-                                    <div className="text-sm text-white/50 mt-2">
-                                        {stage.tier === 0 && 'Start here'}
-                                        {stage.tier === 1 && '1 repayment'}
-                                        {stage.tier === 2 && '3 repayments'}
-                                        {stage.tier === 3 && '7 repayments'}
-                                        {stage.tier === 4 && '15 repayments'}
-                                    </div>
+                                    {/* Arrow for mobile */}
+                                    {index < 4 && (
+                                        <div className="md:hidden text-2xl text-white/30 my-2">↓</div>
+                                    )}
                                 </div>
-
-                                {/* Arrow for mobile */}
-                                {index < 4 && (
-                                    <div className="md:hidden text-2xl text-white/30 my-2">↓</div>
-                                )}
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
 

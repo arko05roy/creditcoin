@@ -144,6 +144,7 @@ export function useSupply() {
             ...contracts.lendingPool,
             functionName: 'supply',
             value: parseEther(amount),
+            gas: BigInt(300000),
         });
     };
 
@@ -169,6 +170,7 @@ export function useWithdraw() {
             ...contracts.lendingPool,
             functionName: 'withdraw',
             args: [parseEther(amount)],
+            gas: BigInt(300000),
         });
     };
 
@@ -195,6 +197,7 @@ export function useBorrow() {
             functionName: 'borrow',
             args: [parseEther(amount)],
             value: parseEther(collateral),
+            gas: BigInt(500000),
         });
     };
 
@@ -220,6 +223,7 @@ export function useRepay() {
             ...contracts.lendingPool,
             functionName: 'repay',
             value: parseEther(amount),
+            gas: BigInt(500000),
         });
     };
 
@@ -245,6 +249,7 @@ export function useLiquidate() {
             ...contracts.lendingPool,
             functionName: 'liquidate',
             args: [borrower],
+            gas: BigInt(500000),
         });
     };
 

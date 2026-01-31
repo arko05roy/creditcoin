@@ -70,3 +70,60 @@ export const INTEREST_RATES = {
     3: 200, // 2%
     4: 100, // 1%
 } as const;
+
+// Pet Sprite Configuration
+export const PET_SPRITES = {
+    stages: ['egg', 'hatchling', 'juvenile', 'adult', 'legendary'] as const,
+
+    // Image paths for each stage (add your sprites to public/pets/)
+    images: {
+        0: { normal: '/pets/egg.png', weak: '/pets/egg-weak.png' },
+        1: { normal: '/pets/hatchling.png', weak: '/pets/hatchling-weak.png' },
+        2: { normal: '/pets/juvenile.png', weak: '/pets/juvenile-weak.png' },
+        3: { normal: '/pets/adult.png', weak: '/pets/adult-weak.png' },
+        4: { normal: '/pets/legendary.png', weak: '/pets/legendary-weak.png' },
+    } as const,
+
+    // Fallback emojis when images aren't available
+    emojis: ['🥚', '🐣', '🐤', '🦅', '🐉'] as const,
+
+    // Colors for each stage (used for backgrounds/borders)
+    colors: {
+        0: { primary: '#fbbf24', secondary: '#f59e0b' }, // Egg - Yellow/Orange
+        1: { primary: '#34d399', secondary: '#10b981' }, // Hatchling - Green
+        2: { primary: '#60a5fa', secondary: '#3b82f6' }, // Juvenile - Blue
+        3: { primary: '#a78bfa', secondary: '#8b5cf6' }, // Adult - Purple
+        4: { primary: '#f472b6', secondary: '#ec4899' }, // Legendary - Pink
+    } as const,
+};
+
+/**
+ * Get pet sprite image path
+ * @param stage Pet stage (0-4)
+ * @param isWeakened Whether pet is weakened
+ * @returns Image path string
+ */
+export function getPetImage(stage: number, isWeakened: boolean = false): string {
+    const stageImages = PET_SPRITES.images[stage as keyof typeof PET_SPRITES.images];
+    if (!stageImages) return PET_SPRITES.images[0].normal;
+    return isWeakened ? stageImages.weak : stageImages.normal;
+}
+
+/**
+ * Get pet emoji fallback
+ * @param stage Pet stage (0-4)
+ * @returns Emoji string
+ */
+export function getPetEmoji(stage: number): string {
+    return PET_SPRITES.emojis[stage] || PET_SPRITES.emojis[0];
+}
+
+/**
+ * Get pet stage color
+ * @param stage Pet stage (0-4)
+ * @returns Color object with primary and secondary
+ */
+export function getPetColor(stage: number): { primary: string; secondary: string } {
+    return PET_SPRITES.colors[stage as keyof typeof PET_SPRITES.colors] || PET_SPRITES.colors[0];
+}
+

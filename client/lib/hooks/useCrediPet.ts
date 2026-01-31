@@ -97,6 +97,7 @@ export function useMintPet() {
         writeContract({
             ...contracts.crediPet,
             functionName: 'mint',
+            gas: BigInt(500000), // Explicit gas limit
         });
     };
 
