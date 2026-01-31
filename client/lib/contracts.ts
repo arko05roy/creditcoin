@@ -4,11 +4,12 @@ import LendingPoolABI from './abis/LendingPool.json';
 import QuestBoardABI from './abis/QuestBoard.json';
 
 // Contract Addresses (Creditcoin Testnet Deployment)
+// Hardcoded with fallbacks for production
 export const CONTRACT_ADDRESSES = {
-    crediPet: process.env.NEXT_PUBLIC_CREDIPET_ADDRESS as `0x${string}`,
-    creditScore: process.env.NEXT_PUBLIC_CREDITSCORE_ADDRESS as `0x${string}`,
-    lendingPool: process.env.NEXT_PUBLIC_LENDINGPOOL_ADDRESS as `0x${string}`,
-    questBoard: process.env.NEXT_PUBLIC_QUESTBOARD_ADDRESS as `0x${string}`,
+    crediPet: (process.env.NEXT_PUBLIC_CREDIPET_ADDRESS || '0xeEc45Fd463EA8137e46170694414703Ebb791119') as `0x${string}`,
+    creditScore: (process.env.NEXT_PUBLIC_CREDITSCORE_ADDRESS || '0x8c7Ffc95fcD2b9Dfb48272A0cEb6f54e7CE77b14') as `0x${string}`,
+    lendingPool: (process.env.NEXT_PUBLIC_LENDINGPOOL_ADDRESS || '0x5754C71c2474FE8F2B83C43432Faf0AC94cc24A5') as `0x${string}`,
+    questBoard: (process.env.NEXT_PUBLIC_QUESTBOARD_ADDRESS || '0x98eFA762eDa5FB0C3BA02296c583A5a542c66c8b') as `0x${string}`,
 } as const;
 
 // Contract Configurations
